@@ -1,0 +1,2 @@
+﻿CREATE SCHEMA [ini] AUTHORIZATION [dbo]
+GO
