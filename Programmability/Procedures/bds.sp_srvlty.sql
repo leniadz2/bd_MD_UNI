@@ -63,7 +63,6 @@ AS
                WHEN (DATEPART(hh,st.HORA)) between  18  and  20 then  'R4.Cena      (18-20)'
                WHEN (DATEPART(hh,st.HORA)) between  21  and  23 then  'R5.Noche     (21-23)'
            END AS    srv_HORA_RANGO
-          --,st.CAJERO                                  AS    srv_CAJERO
           ,st.VENDEDOR                                AS    srv_VENDEDOR
           ,st.DNI                                     AS    srv_DNI
           ,st.RUC                                     AS    srv_RUC
@@ -103,52 +102,30 @@ AS
           ,lc.FECHANACIMIENTO                         AS    lty_FECHANACIMIENTO
           ,lc.EDAD                                    AS    lty_EDAD
           ,lc.EDAD_RANGO                              AS    lty_EDAD_RANGO
-          --,lc.SEXO_TIT                                AS    lty_SEXO_TIT
           ,lc.SEXO_TIT_D                              AS    lty_SEXO_TIT_D
-          --,lc.FLAGESTADOCIVIL                         AS    lty_FLAGESTADOCIVIL
           ,lc.FLAGESTADOCIVIL_D                       AS    lty_F_ESTADOCIVIL_D
-          --,lc.FLAGTIENEHIJOS                          AS    lty_FLAGTIENEHIJOS
-          --,lc.FLAGTIENEHIJOS_D                        AS    lty_FLAGTIENEHIJOS_D
-          --,lc.FLAGTIENETELEFONO                       AS    lty_FLAGTIENETELEFONO
-          --,lc.FLAGTIENETELEFONO_D                     AS    lty_FLAGTIENETELEFONO_D
-          --,lc.FLAGTIENECORREO                         AS    lty_FLAGTIENECORREO
-          --,lc.FLAGTIENECORREO_D                       AS    lty_FLAGTIENECORREO_D
-          --,lc.FLAGCOMPARTEDATOS                       AS    lty_FLAGCOMPARTEDATOS
           ,lc.FLAGCOMPARTEDATOS_D                     AS    lty_F_COMPARTEDATOS_D
-          --,lc.FLAGAUTCANJE                            AS    lty_FLAGAUTCANJE
           ,lc.FLAGAUTCANJE_D                          AS    lty_F_AUTCANJE_D
-          --,lc.FLAGCLTEFALLECIDO                       AS    lty_FLAGCLTEFALLECIDO
           ,lc.FLAGCLTEFALLECIDO_D                     AS    lty_F_CLTEFALLECIDO_D
           ,lc.RAZONSOCIAL                             AS    lty_RAZONSOCIAL
-          --,lc.FECHACREACION_PER                       AS    lty_FECHACREACION_PER
-          --,lc.HORACREACION_PER                        AS    lty_HORACREACION_PER
-          --,lc.FECHAULTMODIF_PER                       AS    lty_FECHAULTMODIF_PER
-          --,lc.FECHACARGAINICIAL_PER                   AS    lty_FECHACARGAINICIAL_PER
-          --,lc.FECHACARGAULTMODIF_PER                  AS    lty_FECHACARGAULTMODIF_PER
           ,lc.CODPOS                                  AS    lty_CODPOS
           ,lc.DIRECCION                               AS    lty_DIRECCION
           ,lc.DEPARTAMENTO                            AS    lty_DEPARTAMENTO
           ,lc.PROVINCIA                               AS    lty_PROVINCIA
           ,lc.DISTRITO                                AS    lty_DISTRITO
           ,IIF(lc.CODIGOPERSONA IS NULL,NULL,CONCAT(lc.DEPARTAMENTO,'|',lc.PROVINCIA,'|',lc.DISTRITO)) AS    lty_DISTRITO_ID
-          --,lc.FLAGULTIMO_DIR                          AS    lty_FLAGULTIMO_DIR
           ,lc.REFERENCIA                              AS    lty_REFERENCIA
           ,lc.ESTADO                                  AS    lty_ESTADO
           ,lc.ESTADO_D                                AS    lty_ESTADO_D
           ,lc.COORDENADAX                             AS    lty_COORDENADAX
           ,lc.COORDENADAY                             AS    lty_COORDENADAY
-          --,lc.FLAGCOORDENADA                          AS    lty_FLAGCOORDENADA
           ,lc.NSE                                     AS    lty_NSE
           ,lc.TELEFONO                                AS    lty_TELEFONO
-          --,lc.TELEFONO_D                              AS    lty_TELEFONO_D
           ,IIF(lc.TELEFONO IS NULL, NULL, lc.TELEFONO_D) AS lty_TELEFONO_D
-          --,lc.FECHACREACION_TEL                       AS    lty_FECHACREACION_TEL
           ,lc.EMAIL                                   AS    lty_EMAIL
-          --,lc.FECHACREACION_EML                       AS    lty_FECHACREACION_EML
           ,lc.HIJ_AS                                  AS    lty_HIJ_AS
           ,lc.HIJ_OS                                  AS    lty_HIJ_OS
           ,lc.HIJ_NN                                  AS    lty_HIJ_NN
-          --,lc.HIJ_TOT                                 AS    lty_HIJ_TOT
           ,CASE st.RUCEMISOR
                 WHEN '20416026948' THEN IIF(rc.SUBGAFO IS NULL,NULL,'Negocios Propios')
                 WHEN '20507885391' THEN IIF(rc.SUBGAFO IS NULL,NULL,'Negocios Propios')
@@ -165,13 +142,10 @@ AS
           ,rc.SUBGAFO                 AS com_SubGafo
       INTO bds.SRVLYTY
       FROM bds.SRV_TABLON st
-
         LEFT JOIN ini.LYTY_ASOCIADO lo
           ON st.CODIGOMALL = lo.AZU_IDGRCO
-
         LEFT JOIN bds.LYTY_CLI lc
           ON st.DNI = lc.NRODOCUMENTO
-
         LEFT JOIN bds.RE_CONTRATOS rc
           ON lo.SAP_SOC = rc.SOCIEDAD
          AND st.RUCEMISOR = rc.NIF
