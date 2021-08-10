@@ -1,0 +1,2 @@
+﻿CREATE SYNONYM [bds].[SRV_TABLON] FOR [MD_SRV].[bds].[SRV_TABLON]
+GO
