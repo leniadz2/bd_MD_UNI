@@ -80,6 +80,7 @@ AS
           ,s.srv_PRECIOVTAUNITITEM
           ,s.srv_CARGODESCUENTOITEM
           ,s.srv_PRECIOTOTALITEM
+          ,IIF(s.lty_NUMTARJETABONUS IS NOT NULL,'Con Bonus','Sin Bonus') AS  lty_FIDELIDAD --> MEJORA
           ,s.lty_CODIGOPERSONA
           ,s.lty_ORDTARJETABONUS
           ,s.lty_NUMTARJETABONUS

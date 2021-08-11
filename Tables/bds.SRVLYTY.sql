@@ -40,6 +40,7 @@
   [srv_PRECIOVTAUNITITEM] [decimal](18, 2) NULL,
   [srv_CARGODESCUENTOITEM] [decimal](18, 2) NULL,
   [srv_PRECIOTOTALITEM] [decimal](18, 2) NULL,
+  [lty_FIDELIDAD] [varchar](10) NULL,
   [lty_CODIGOPERSONA] [varchar](10) NULL,
   [lty_ORDTARJETABONUS] [int] NULL,
   [lty_NUMTARJETABONUS] [varchar](19) NULL,
