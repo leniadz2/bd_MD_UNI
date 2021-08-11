@@ -1,4 +1,4 @@
-﻿CREATE TABLE [bds].[SRVLYTY_or] (
+﻿CREATE TABLE [bds].[xSRVLYTY_bkp1008] (
   [srv_ID] [varchar](30) NULL,
   [srv_NOMBRE] [varchar](50) NULL,
   [srv_RAZONSOCIAL] [varchar](50) NULL,

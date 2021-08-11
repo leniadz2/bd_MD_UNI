@@ -26,6 +26,17 @@ AS
   
   ***************************************************************************************************/
   --182s
+
+    /*WA para columna con CONTRATO RE
+    UPDATE bds.SRV_TABLON
+       SET IDENTIFICADORTERMINAL = so.CONTRATO_RE
+      FROM ods.SRVCOM_OPERADORES_temp so
+           INNER JOIN bds.SRV_TABLON st
+              ON so.CODIGOMALL = st.CODIGOMALL 
+             AND so.RUCEMISOR = st.RUCEMISOR
+             AND so.CODIGOTIENDA = st.CODIGOTIENDA;
+    */
+
     TRUNCATE TABLE ods.SRVLYTY;
 
     DROP INDEX IX1_SRVLYTY ON ods.SRVLYTY;
@@ -35,14 +46,11 @@ AS
           ,st.NOMBRE                                  AS    srv_NOMBRE
           ,st.RAZONSOCIAL                             AS    srv_RAZONSOCIAL
           ,st.NOMBRETIENDA                            AS    srv_NOMBRETIENDA
-          --,CONCAT(st.CODIGOMALL,'|',IIF(rc.GAFO IS NULL,'0',rc.GAFO),'|',IIF(rc.SUBGAFO IS NULL,'0',rc.SUBGAFO),'|',st.NOMBRETIENDA)  AS    srv_NOMBRETIENDA_ID
-          --,NULL  AS    srv_NOMBRETIENDA_ID
-          ,lo.SAP_SOC AS srv_SOCIEDAD
-          ,st.CODIGOMALL                              AS    srv_CODIGOLOCACION --srv_CODIGOMALL
-          ,lo.AZU_DESC_MED AS srv_CODIGOLOCACION_D --> reemplazo de (cl.DescripcionMall)
+          ,lo.SAP_SOC                                 AS    srv_SOCIEDAD
+          ,st.CODIGOMALL                              AS    srv_CODIGOLOCACION
+          ,lo.AZU_DESC_MED                            AS    srv_CODIGOLOCACION_D
           ,st.CODIGOTIENDA                            AS    srv_CODIGOTIENDA
           ,st.RUCEMISOR                               AS    srv_RUCEMISOR
-          --,st.IDENTIFICADORTERMINAL --> WA contrato RE
           ,st.NUMEROTERMINAL                          AS    srv_NUMEROTERMINAL
           ,st.SERIE                                   AS    srv_SERIE
           ,st.TIPOTRANSACCION                         AS    srv_TIPOTRANSACCION
@@ -122,65 +130,13 @@ AS
           ,lc.HIJ_AS                                  AS    lty_HIJ_AS
           ,lc.HIJ_OS                                  AS    lty_HIJ_OS
           ,lc.HIJ_NN                                  AS    lty_HIJ_NN
---          ,CASE st.RUCEMISOR
---                WHEN '20416026948' THEN IIF(rc.SUBGAFO IS NULL,NULL,'Negocios Propios')
---                WHEN '20507885391' THEN IIF(rc.SUBGAFO IS NULL,NULL,'Negocios Propios')
---                WHEN '20514020907' THEN IIF(rc.SUBGAFO IS NULL,NULL,'Negocios Propios')
---                WHEN '20553255881' THEN IIF(rc.SUBGAFO IS NULL,NULL,'Negocios Propios')
---                ELSE IIF(rc.SUBGAFO IS NULL,NULL,'Locatarios')
---           END AS com_TipoNegocio
-----          ,rc.CONTRATO                AS com_ContratoRE --> st.IDENTIFICADORTERMINAL (WA contrato RE)
-          ,st.IDENTIFICADORTERMINAL                AS com_ContratoRE
---          ,rc.DEN_CONTRATO            AS com_denContrato
---          ,rc.VIGCONTRATO             AS com_VigContrato
---          ,rc.NOMCOMERCIAL            AS com_NomComercial
---          ,rc.OBJALQUILER             AS com_ObjAlquiler
---          ,rc.GAFO                    AS com_Gafo
---          ,rc.SUBGAFO                 AS com_SubGafo
+          ,st.IDENTIFICADORTERMINAL                AS com_ContratoRE --> (WA contrato RE)
       FROM bds.SRV_TABLON st
-        LEFT JOIN ini.LYTY_ASOCIADO lo
-          ON st.CODIGOMALL = lo.AZU_IDGRCO
-        LEFT JOIN bds.LYTY_CLI lc
-          ON st.DNI = lc.NRODOCUMENTO
---        LEFT JOIN bds.RE_CONTRATOS rc
---          ON lo.SAP_SOC = rc.SOCIEDAD ---------------
---         AND st.RUCEMISOR = rc.NIF
---         AND st.IDENTIFICADORTERMINAL = rc.CONTRATO --> HABILITAR al remover --*temporal*
+           LEFT JOIN ini.LYTY_ASOCIADO lo
+             ON st.CODIGOMALL = lo.AZU_IDGRCO
+           LEFT JOIN bds.LYTY_CLI lc
+             ON st.DNI = lc.NRODOCUMENTO
 
-        --*temporal-----------------------------
---        LEFT JOIN ods.SRVCOM_OPERADORES_temp so
---          ON lo.AZU_IDGRCO = so.CODIGOMALL 
---         AND rc.NIF = so.RUCEMISOR
---         AND rc.CONTRATO = so.CONTRATO_RE
-        --------------------------------temporal*
-
-/*
-SELECT DISTINCT
-       srv_RUCEMISOR AS RUCEMISOR, 
-       srv_CODIGOLOCACION AS CODIGOMALL, 
-       srv_CODIGOTIENDA AS CODIGOTIENDA, 
-       com_ContratoRE AS CONTRATO_RE
-INTO ini.SRVCOM_OPERADORES
-FROM MD_UNI.bds.SRVLYTY_or
-
---30s
-UPDATE bds.SRV_TABLON
-   SET IDENTIFICADORTERMINAL = NULL;
-
---01m25s
---04m40s
---04m15s
-UPDATE bds.SRV_TABLON
-   SET IDENTIFICADORTERMINAL = so.CONTRATO_RE
-  FROM ods.SRVCOM_OPERADORES_temp so
-       INNER JOIN bds.SRV_TABLON st
-          ON so.CODIGOMALL = st.CODIGOMALL 
-         AND so.RUCEMISOR = st.RUCEMISOR
-         AND so.CODIGOTIENDA = st.CODIGOTIENDA;
-      
-*/
-     --WHERE rc.ORDINTERLOCCOMERCIAL = 1
-
-CREATE INDEX IX1_SRVLYTY ON ods.SRVLYTY(srv_SOCIEDAD, srv_RUCEMISOR, com_ContratoRE);
+    CREATE INDEX IX1_SRVLYTY ON ods.SRVLYTY(srv_SOCIEDAD, srv_RUCEMISOR, com_ContratoRE);
 
 GO
